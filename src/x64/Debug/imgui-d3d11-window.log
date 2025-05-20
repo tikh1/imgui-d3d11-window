@@ -1,2 +1,16 @@
-﻿  main.cpp
-  imgui-d3d11-window.vcxproj -> C:\Users\tikhi\Desktop\gt\imgui-d3d11-window\x64\Debug\imgui-d3d11-window.exe
+﻿  imgui.cpp
+  imgui_demo.cpp
+  imgui_draw.cpp
+  imgui_impl_dx11.cpp
+  imgui_impl_win32.cpp
+  imgui_tables.cpp
+  imgui_widgets.cpp
+  main.cpp
+C:\Users\tikhi\Desktop\gta\imgui-d3d11-window\src\main.cpp(14,48): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\tikhi\Desktop\gta\imgui-d3d11-window\src\main.cpp(14,26): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+  ui.cc
+C:\Users\tikhi\Desktop\gta\imgui-d3d11-window\src\ui\ui.cc(10,59): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+C:\Users\tikhi\Desktop\gta\imgui-d3d11-window\src\ui\ui.cc(10,44): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+  LINK : C:\Users\tikhi\Desktop\gta\imgui-d3d11-window\x64\Debug\imgui-d3d11-window.exe not found or not built by the last incremental link; performing full link
+  imgui-d3d11-window.vcxproj -> C:\Users\tikhi\Desktop\gta\imgui-d3d11-window\x64\Debug\imgui-d3d11-window.exe

@@ -1,17 +1,30 @@
-#include "main.hpp"
+﻿#include "main.hpp"
 #include "ui/ui.hh"
 #include "globals.hpp"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
 {
-    // Register window class
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L,
                       GetModuleHandle(NULL), NULL, NULL, NULL, NULL,
                       ui::window_title_wide, NULL };
     RegisterClassEx(&wc);
-    g_hWnd = CreateWindow(wc.lpszClassName, ui::window_title_wide,
-        WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800,
+
+    g_hWnd = CreateWindowExW(WS_EX_TRANSPARENT,
+        wc.lpszClassName, ui::window_title_wide, 
+        WS_POPUP, globals.window_pos_x, globals.window_pos_y, globals.width, globals.height,
         NULL, NULL, wc.hInstance, NULL);
+
+    // Set window position to middle of the screen
+    RECT rc;
+    GetWindowRect(g_hWnd, &rc);
+    int winWidth = rc.right - rc.left;
+    int winHeight = rc.bottom - rc.top;
+    int screenWidth = GetSystemMetrics(SM_CXSCREEN);
+    int screenHeight = GetSystemMetrics(SM_CYSCREEN);
+    SetWindowPos(g_hWnd, HWND_TOP,
+        (screenWidth - winWidth) / 2,
+        (screenHeight - winHeight) / 2,
+        0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_SHOWWINDOW);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(g_hWnd)) {
@@ -20,7 +33,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE, LPSTR, int)
         return 1;
     }
 
-    ShowWindow(g_hWnd, SW_SHOWDEFAULT);
+    ShowWindow(g_hWnd, SW_SHOWNORMAL);
     UpdateWindow(g_hWnd);
 
     // Setup Dear ImGui context
@@ -96,6 +109,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         return 0;
+    case WM_LBUTTONDOWN:
+        {
+            POINTS points = MAKEPOINTS(lParam);
+            globals.position = points;
+            SetCapture(hWnd);
+        }
+        break;
+
+    case WM_LBUTTONUP:
+        ReleaseCapture();
+        break;
+
+    case WM_MOUSEMOVE:
+        if (wParam == MK_LBUTTON)
+        {
+            POINTS points = MAKEPOINTS(lParam);
+            RECT rect;
+            GetWindowRect(hWnd, &rect);
+            
+            int newX = rect.left + (points.x - globals.position.x);
+            int newY = rect.top + (points.y - globals.position.y);
+            
+            SetWindowPos(
+                hWnd,
+                HWND_TOPMOST,
+                newX,
+                newY,
+                0, 0,
+                SWP_SHOWWINDOW | SWP_NOSIZE | SWP_NOZORDER
+            );
+        }
+        break;
     }
     return DefWindowProc(hWnd, msg, wParam, lParam);
 }

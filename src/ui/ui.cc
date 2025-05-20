@@ -1,4 +1,4 @@
-#include "ui.hh"
+﻿#include "ui.hh"
 #include "../globals.hpp"
 #include "../imgui/imgui.h"
 #include "../imgui/imgui_internal.h"
@@ -6,8 +6,8 @@
 void ui::render() {
     if (!globals.active) return;
 
-    ImGui::SetNextWindowPos(ImVec2(window_pos.x, window_pos.y), ImGuiCond_Once);
-    ImGui::SetNextWindowSize(ImVec2(window_size.x, window_size.y));
+    ImGui::SetNextWindowPos(ImVec2(globals.window_pos_x, globals.window_pos_y), ImGuiCond_Once);
+    ImGui::SetNextWindowSize(ImVec2(globals.width, globals.height));
     ImGui::SetNextWindowBgAlpha(1.0f);
 
     ImGui::Begin(window_title, &globals.active, window_flags);
@@ -20,6 +20,10 @@ void ui::render() {
         float inputHeight = ImGui::GetTextLineHeightWithSpacing();
         float centerX = (windowSize.x - inputWidth) * 0.5f;
         float centerY = (windowSize.y - inputHeight) * 0.5f;
+
+        if (ImGui::Button("X", ImVec2(20, 20))) {
+            exit(0);
+        }
 
         ImGui::SetCursorPos(ImVec2(centerX, centerY - 65));
         ImGui::Text("Username");
@@ -51,10 +55,10 @@ void ui::init(ID3D11Device* device) {
     // colors
     ImGui::StyleColorsDark();
 
-    if (window_pos.x == 0) {
+    if (globals.window_pos_x == 0) {
         RECT screen_rect{};
         GetWindowRect(GetDesktopWindow(), &screen_rect);
-        screen_res = ImVec2(float(screen_rect.right), float(screen_rect.bottom));
+        globals.screen_res = ImVec2(float(screen_rect.right), float(screen_rect.bottom));
         // init images here
     }
 }
